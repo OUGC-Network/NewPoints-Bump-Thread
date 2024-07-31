@@ -1,0 +1,18 @@
+{
+  "interval": {
+    "type": "numeric",
+    "value": 30
+  },
+  "forums": {
+    "type": "forumselect",
+    "value": -1
+  },
+  "groups": {
+    "type": "groupselect",
+    "value": -1
+  },
+  "points": {
+    "type": "text",
+    "value": 10
+  }
+}
