@@ -30,15 +30,15 @@
 defined('IN_MYBB') or die('Direct initialization of this file is not allowed.');
 
 // Add the hooks we are going to use.
-if (defined("IN_ADMINCP")) {
-    $plugins->add_hook("newpoints_admin_grouprules_add", "newpoints_bump_thread_admin_grouprules");
-    $plugins->add_hook("newpoints_admin_grouprules_edit", "newpoints_bump_thread_admin_grouprules");
-    $plugins->add_hook("newpoints_admin_grouprules_add_insert", "newpoints_bump_thread_admin_grouprules_post");
-    $plugins->add_hook("newpoints_admin_grouprules_edit_update", "newpoints_bump_thread_admin_grouprules_post");
-    $plugins->add_hook("newpoints_admin_forumrules_add", "newpoints_bump_thread_admin_forumrules");
-    $plugins->add_hook("newpoints_admin_forumrules_edit", "newpoints_bump_thread_admin_forumrules");
-    $plugins->add_hook("newpoints_admin_forumrules_add_insert", "newpoints_bump_thread_admin_forumrules_post");
-    $plugins->add_hook("newpoints_admin_forumrules_edit_update", "newpoints_bump_thread_admin_forumrules_post");
+if (defined('IN_ADMINCP')) {
+    $plugins->add_hook('newpoints_admin_grouprules_add', 'newpoints_bump_thread_admin_grouprules');
+    $plugins->add_hook('newpoints_admin_grouprules_edit', 'newpoints_bump_thread_admin_grouprules');
+    $plugins->add_hook('newpoints_admin_grouprules_add_insert', 'newpoints_bump_thread_admin_grouprules_post');
+    $plugins->add_hook('newpoints_admin_grouprules_edit_update', 'newpoints_bump_thread_admin_grouprules_post');
+    $plugins->add_hook('newpoints_admin_forumrules_add', 'newpoints_bump_thread_admin_forumrules');
+    $plugins->add_hook('newpoints_admin_forumrules_edit', 'newpoints_bump_thread_admin_forumrules');
+    $plugins->add_hook('newpoints_admin_forumrules_add_insert', 'newpoints_bump_thread_admin_forumrules_post');
+    $plugins->add_hook('newpoints_admin_forumrules_edit_update', 'newpoints_bump_thread_admin_forumrules_post');
     $plugins->add_hook('newpoints_rebuild_templates', 'newpoints_bump_thread_rebuild_templates');
 } else {
     $plugins->add_hook('datahandler_post_insert_post', 'newpoints_bump_thread_newpost');
@@ -70,7 +70,7 @@ function newpoints_bump_thread_info()
         $lang->newpoints_bump_thread_desc .= '<br/><br/><p style="padding-left:10px;margin:0;">' . $lang->newpoints_bump_thread_credits . '</p>';
     }
 
-    return array(
+    return [
         'name' => 'Newpoints Bump Thread',
         'description' => $lang->newpoints_bump_thread_desc,
         'website' => 'http://omarg.me',
@@ -79,7 +79,7 @@ function newpoints_bump_thread_info()
         'version' => '2.0',
         'versioncode' => 2000,
         'compatibility' => '2*'
-    );
+    ];
 }
 
 // _activate() routine
@@ -92,32 +92,32 @@ function newpoints_bump_thread_activate()
     newpoints_rebuild_templates();
 
     // Now we can insert our settings
-    newpoints_add_settings('newpoints_bump_thread', array(
-        'interval' => array(
+    newpoints_add_settings('newpoints_bump_thread', [
+        'interval' => [
             'title' => $lang->setting_newpoints_bump_thread_interval,
             'description' => $lang->setting_newpoints_bump_thread_interval_desc,
             'type' => 'numeric',
             'value' => 30
-        ),
-        'forums' => array(
+        ],
+        'forums' => [
             'title' => $lang->setting_newpoints_bump_thread_forums,
             'description' => $lang->setting_newpoints_bump_thread_forums_desc,
             'type' => 'forumselect',
             'value' => -1
-        ),
-        'groups' => array(
+        ],
+        'groups' => [
             'title' => $lang->setting_newpoints_bump_thread_groups,
             'description' => $lang->setting_newpoints_bump_thread_groups_desc,
             'type' => 'groupselect',
             'value' => -1
-        ),
-        'points' => array(
+        ],
+        'points' => [
             'title' => $lang->setting_newpoints_bump_thread_points,
             'description' => $lang->setting_newpoints_bump_thread_points_desc,
             'type' => 'text',
             'value' => 10
-        ),
-    ));
+        ],
+    ]);
 
     // Add the button variable
     require_once MYBB_ROOT . '/inc/adminfunctions_templates.php';
@@ -130,7 +130,7 @@ function newpoints_bump_thread_activate()
     // Insert/update version into cache
     $plugins = $cache->read('ougc_plugins');
     if (!$plugins) {
-        $plugins = array();
+        $plugins = [];
     }
 
     $info = newpoints_bump_thread_info();
@@ -167,7 +167,7 @@ function newpoints_bump_thread_install()
         'lastpostbump',
         'int(10) NOT NULL DEFAULT \'0\''
     );
-    $db->update_query('threads', array('lastpostbump' => '`lastpost`'), '', '', true);
+    $db->update_query('threads', ['lastpostbump' => '`lastpost`'], '', '', true);
 
     $db->field_exists('bumps_rate', 'newpoints_grouprules') or $db->add_column(
         'newpoints_grouprules',
@@ -242,7 +242,7 @@ function newpoints_bump_thread_uninstall()
     !$db->field_exists('lastpostbump', 'users') or $db->drop_column('users', 'lastpostbump');
 
     // Clean any logs from this plugin.
-    newpoints_remove_log(array('bump'));
+    newpoints_remove_log(['bump']);
 
     // Delete version from cache
     $plugins = (array)$cache->read('ougc_plugins');
@@ -288,7 +288,7 @@ function newpoints_bump_thread_admin_grouprules(&$form_container)
             $form->generate_text_box(
                 'bumps_rate',
                 (isset($rule['bumps_rate']) ? (float)$rule['bumps_rate'] : 1),
-                array('id' => 'bumps_rate')
+                ['id' => 'bumps_rate']
             ),
             'bumps_rate'
         );
@@ -298,7 +298,7 @@ function newpoints_bump_thread_admin_grouprules(&$form_container)
             $form->generate_text_box(
                 'bumps_forums',
                 (isset($rule['bumps_forums']) ? newpoints_bump_thread_clean_array($rule['bumps_forums'], true) : ''),
-                array('id' => 'bumps_forums')
+                ['id' => 'bumps_forums']
             ),
             'bumps_forums'
         );
@@ -308,7 +308,7 @@ function newpoints_bump_thread_admin_grouprules(&$form_container)
             $form->generate_text_box(
                 'bumps_interval',
                 (isset($rule['bumps_interval']) ? (int)$rule['bumps_interval'] : ''),
-                array('id' => 'bumps_interval')
+                ['id' => 'bumps_interval']
             ),
             'bumps_interval'
         );
@@ -342,7 +342,7 @@ function newpoints_bump_thread_admin_forumrules()
             $form->generate_text_box(
                 'bumps_rate',
                 (isset($rule['bumps_rate']) ? (float)$rule['bumps_rate'] : 1),
-                array('id' => 'bumps_rate')
+                ['id' => 'bumps_rate']
             ),
             'bumps_rate'
         );
@@ -352,7 +352,7 @@ function newpoints_bump_thread_admin_forumrules()
             $form->generate_text_box(
                 'bumps_groups',
                 (isset($rule['bumps_groups']) ? newpoints_bump_thread_clean_array($rule['bumps_groups'], true) : ''),
-                array('id' => 'bumps_groups')
+                ['id' => 'bumps_groups']
             ),
             'bumps_groups'
         );
@@ -362,7 +362,7 @@ function newpoints_bump_thread_admin_forumrules()
             $form->generate_text_box(
                 'bumps_interval',
                 (isset($rule['bumps_interval']) ? (int)$rule['bumps_interval'] : ''),
-                array('id' => 'bumps_interval')
+                ['id' => 'bumps_interval']
             ),
             'bumps_interval'
         );
@@ -405,7 +405,7 @@ function newpoints_bump_thread_newpost(&$dh)
 {
     global $db;
 
-    $db->update_query('threads', array('lastpostbump' => TIME_NOW), 'tid=' . (int)$dh->data['tid']);
+    $db->update_query('threads', ['lastpostbump' => TIME_NOW], 'tid=' . (int)$dh->data['tid']);
 }
 
 function newpoints_bump_thread_run()
@@ -507,8 +507,8 @@ function newpoints_bump_thread_run()
 
         // They passed trow here, so lets bump the thread!!
         global $db;
-        $db->update_query('threads', array('lastpostbump' => TIME_NOW), 'tid=' . (int)$thread['tid']);
-        $db->update_query('users', array('lastpostbump' => TIME_NOW), 'uid=' . (int)$mybb->user['uid']);
+        $db->update_query('threads', ['lastpostbump' => TIME_NOW], 'tid=' . (int)$thread['tid']);
+        $db->update_query('users', ['lastpostbump' => TIME_NOW], 'uid=' . (int)$mybb->user['uid']);
         $db->delete_query('forumsread', 'fid=\'' . (int)$thread['fid'] . '\''); // someone might complain..
         $db->delete_query('threadsread', 'tid=\'' . (int)$thread['tid'] . '\'');
         // need we to modify search queries? may be..
@@ -600,7 +600,7 @@ if (!function_exists('control_object')) {
         $checkstr = 'O:' . strlen($classname) . ':"' . $classname . '":';
         $checkstr_len = strlen($checkstr);
         if (substr($objserial, 0, $checkstr_len) == $checkstr) {
-            $vars = array();
+            $vars = [];
             // grab resources/object etc, stripping scope info from keys
             foreach ((array)$obj as $k => $v) {
                 if ($p = strrpos($k, "\0")) {
