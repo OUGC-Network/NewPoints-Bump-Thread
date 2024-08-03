@@ -30,8 +30,10 @@ declare(strict_types=1);
 
 namespace Newpoints\BumpThread\Hooks\Forum;
 
+use function Newpoints\Core\get_setting;
 use function Newpoints\Core\language_load;
 use function Newpoints\Core\control_db;
+use function Newpoints\Core\points_add;
 use function Newpoints\Core\templates_get;
 
 use function Newpoints\Core\templates_get_plugin;
@@ -74,10 +76,7 @@ function showthread_start09(): bool
         $mybb->settings['newpoints_bump_thread_forums'] = $groupsrules['bumps_forums'];
     }
 
-    if ($mybb->settings['newpoints_bump_thread_forums'] != -1 && !strpos(
-            ',' . $mybb->settings['newpoints_bump_thread_forums'] . ',',
-            ',' . $thread['fid'] . ','
-        )) {
+    if (!is_member(get_setting('bump_thread_forums'), ['usergroup' => $thread['fid'], 'additionalgroups' => ''])) {
         return false;
     }
 
@@ -85,16 +84,14 @@ function showthread_start09(): bool
         $mybb->settings['newpoints_bump_thread_groups'] = $forumrules['bumps_groups'];
     }
 
-    if ($mybb->settings['newpoints_bump_thread_groups'] != -1 && !is_member(
-            $mybb->settings['newpoints_bump_thread_groups']
-        )) {
+    if (!is_member(get_setting('bump_thread_groups'))) {
         return false;
     }
 
     // Interval time
     // The issue here is, should we use the largest interval ratio or the lowest one? This is "easy" to solve, allowing administrators to make use of the "-" sign inside the value to determine how it should work.
     // The real issue, is if whether forum or groups rules should be checked before any other, the order can modify the end result. I decided to go with forum rule first.
-    $interval = (int)$mybb->settings['newpoints_bump_thread_interval'];
+    $interval = (int)get_setting('bump_thread_interval');
 
     if (isset($forumrules['bumps_interval']) && $forumrules['bumps_interval'] >= 0) {
         $finterval = (int)$forumrules['bumps_interval'];
@@ -148,7 +145,9 @@ function showthread_start09(): bool
     // Request
     if ($permission) {
         // Set $points based in groupsrules and forumrules.
-        $points = (float)$mybb->settings['newpoints_bump_thread_points'] * (float)($groupsrules['bumps_rate'] ?? 1) * (float)($forumrules['bumps_rate'] ?? 1);
+        $points = (float)get_setting(
+                'bump_thread_points'
+            ) * (float)($groupsrules['bumps_rate'] ?? 1) * (float)($forumrules['bumps_rate'] ?? 1);
 
         // If is thread author and required points are higher that current user points, show error page.
         if ($thread['uid'] == $mybb->user['uid'] && $points > (float)$mybb->user['newpoints']) {
@@ -174,7 +173,7 @@ function showthread_start09(): bool
 
         // If current user is thread author, remove points, otherwise, don't (so admins/global_mods can bump as much threads how they want, as long as they are not the original authors).
         if ($thread['uid'] == $mybb->user['uid']) {
-            newpoints_addpoints($mybb->user['uid'], -$points);
+            points_add($mybb->user['uid'], -$points);
         }
 
         $threadlink = get_thread_link($thread['tid']);

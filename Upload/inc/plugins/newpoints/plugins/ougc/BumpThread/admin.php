@@ -63,7 +63,8 @@ const FIELDS_DATA = [
         ],
         'bumps_forums' => [
             'type' => 'TEXT',
-            'null' => true
+            'null' => true,
+            'default' => '',
         ],
         'bumps_interval' => [
             'type' => 'INT',
@@ -79,7 +80,8 @@ const FIELDS_DATA = [
         ],
         'bumps_groups' => [
             'type' => 'TEXT',
-            'null' => true
+            'null' => true,
+            'default' => '',
         ],
         'bumps_interval' => [
             'type' => 'INT',
@@ -92,10 +94,13 @@ const FIELDS_DATA = [
 function plugin_information(): array
 {
     global $lang;
+    global $action_file;
 
     language_load('bump_thread');
 
-    $lang->newpoints_bump_thread_desc .= '<br/><br/><p style="padding-left:10px;margin:0;">' . $lang->newpoints_bump_thread_credits . '</p>';
+    if ($action_file === 'plugins.php') {
+        $lang->newpoints_bump_thread_desc .= '<br/><br/><p style="padding-left:10px;margin:0;">' . $lang->newpoints_bump_thread_credits . '</p>';
+    }
 
     return [
         'name' => 'Bump Thread',
