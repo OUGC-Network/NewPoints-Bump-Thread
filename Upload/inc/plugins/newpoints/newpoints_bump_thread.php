@@ -2,7 +2,7 @@
 
 /***************************************************************************
  *
- *    Newpoints Bump Thread plugin (/inc/plugins/newpoints/plugins/ougc/BumpThread/hooks/shared.php)
+ *    Newpoints Bump Thread plugin (/inc/plugins/newpoints/newpoints_bump_thread.php)
  *    Author: Omar Gonzalez
  *    Copyright: © 2012 Omar Gonzalez
  *
@@ -26,24 +26,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 
-declare(strict_types=1);
-
-namespace Newpoints\BumpThread\Hooks\Shared;
-
-use postDataHandler;
-
-function datahandler_post_insert_post(postDataHandler &$data_handler): postDataHandler
-{
-    global $db;
-
-    $db->update_query('threads', ['lastpostbump' => TIME_NOW], 'tid=' . (int)$data_handler->data['tid']);
-
-    return $data_handler;
-}
-
-function datahandler_post_insert_thread(postDataHandler &$data_handler): postDataHandler
-{
-    $data_handler->thread_insert_data['lastpostbump'] = (int)$data_handler->data['dateline'];
-
-    return $data_handler;
-}
+// deprecated

@@ -32,6 +32,7 @@ namespace Newpoints\BumpThread\Hooks\Forum;
 
 use function Newpoints\Core\language_load;
 use function Newpoints\Core\control_db;
+use function Newpoints\Core\templates_get;
 
 function global_start(): bool
 {
@@ -65,7 +66,7 @@ function showthread_start09(): bool
 
     $groupsrules = newpoints_getrules('group', $mybb->user['usergroup']);
 
-    if (!empty($groupsrules['bumps_forums']) || $groupsrules['bumps_forums'] == '0') {
+    if (isset($groupsrules['bumps_forums'])) {
         $mybb->settings['newpoints_bump_thread_forums'] = $groupsrules['bumps_forums'];
     }
 
@@ -76,7 +77,7 @@ function showthread_start09(): bool
         return false;
     }
 
-    if (!empty($forumrules['bumps_groups']) || $forumrules['bumps_groups'] == '0') {
+    if (isset($forumrules['bumps_groups'])) {
         $mybb->settings['newpoints_bump_thread_groups'] = $forumrules['bumps_groups'];
     }
 
@@ -91,7 +92,7 @@ function showthread_start09(): bool
     // The real issue, is if whether forum or groups rules should be checked before any other, the order can modify the end result. I decided to go with forum rule first.
     $interval = (int)$mybb->settings['newpoints_bump_thread_interval'];
 
-    if (!empty($forumrules['bumps_interval']) || $forumrules['bumps_interval'] == '0') {
+    if (isset($forumrules['bumps_interval']) && $forumrules['bumps_interval'] >= 0) {
         $finterval = (int)$forumrules['bumps_interval'];
 
         if (my_strpos($forumrules['bumps_interval'], '-')) {
@@ -105,7 +106,7 @@ function showthread_start09(): bool
         }
     }
 
-    if (!empty($groupsrules['bumps_interval']) || $groupsrules['bumps_interval'] == '0') {
+    if (isset($groupsrules['bumps_interval']) && $groupsrules['bumps_interval'] >= 0) {
         $ginterval = (int)$groupsrules['bumps_interval'];
 
         if (my_strpos($groupsrules['bumps_interval'], '-')) {
@@ -132,7 +133,8 @@ function showthread_start09(): bool
         if ($thread['lastpostbump'] + $interval * 60 > TIME_NOW) {
             $title = $lang->sprintf($lang->newpoints_bump_thread_last, $lastpostbump);
         }
-        eval('$newpoints_bump_thread = "' . $templates->get('newpoints_bump_thread') . '";');
+
+        $newpoints_bump_thread = eval(templates_get('bump_thread'));
     }
 
     if ($mybb->get_input('action') != 'bump') {

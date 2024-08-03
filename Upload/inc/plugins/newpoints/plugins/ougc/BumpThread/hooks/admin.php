@@ -52,7 +52,6 @@ function newpoints_templates_rebuild_start(array $hook_arguments): array
     return $hook_arguments;
 }
 
-
 function newpoints_admin_grouprules_add(FormContainer &$form_container): FormContainer
 {
     global $mybb;

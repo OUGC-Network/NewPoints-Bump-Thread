@@ -36,6 +36,7 @@ use function Newpoints\Core\language_load;
 use function Newpoints\Core\log_remove;
 use function Newpoints\Core\rules_rebuild_cache;
 use function Newpoints\Core\settings_rebuild;
+use function Newpoints\Core\settings_remove;
 use function Newpoints\Core\templates_rebuild;
 use function Newpoints\Core\templates_remove;
 
@@ -112,15 +113,9 @@ function plugin_activation(): bool
 {
     global $cache;
 
-    language_load();
+    language_load('bump_thread');
 
     $plugin_information = plugin_information();
-
-    plugin_library_load();
-
-    settings_rebuild();
-
-    templates_rebuild();
 
     // Insert/update version into cache
     $plugins_list = $cache->read('ougc_plugins');
@@ -201,12 +196,17 @@ function plugin_uninstallation(): bool
         }
     }
 
-
-    newpoints_remove_settings(
-        'newpoints_bump_thread_interval, newpoints_bump_thread_forums, newpoints_bump_thread_groups, newpoints_bump_thread_points'
+    settings_remove(
+        [
+            'interval',
+            'forums',
+            'groups',
+            'points'
+        ],
+        'newpoints_bump_thread_'
     );
 
-    templates_remove('newpoints_bump_thread_showthread_button');
+    templates_remove(['showthread_button'], 'newpoints_bump_thread_');
 
     // Delete version from cache
     $plugins_list = (array)$cache->read('ougc_plugins');

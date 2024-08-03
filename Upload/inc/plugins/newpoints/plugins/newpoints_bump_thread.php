@@ -42,7 +42,7 @@ defined('IN_MYBB') || die('Direct initialization of this file is not allowed.');
 define('Newpoints\BumpThread\ROOT', ROOT_PLUGINS . '/ougc/BumpThread');
 
 if (defined('IN_ADMINCP')) {
-    require_once \Newpoints\BumpThread\ROOT . '/admin.php';
+    require_once ROOT . '/admin.php';
 
     require_once ROOT . '/hooks/admin.php';
 
@@ -78,7 +78,6 @@ function newpoints_bump_thread_install(): bool
     return plugin_installation();
 }
 
-// _uninstall
 function newpoints_bump_thread_uninstall(): bool
 {
     return plugin_uninstallation();
