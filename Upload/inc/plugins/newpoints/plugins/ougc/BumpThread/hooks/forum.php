@@ -34,6 +34,10 @@ use function Newpoints\Core\language_load;
 use function Newpoints\Core\control_db;
 use function Newpoints\Core\templates_get;
 
+use function Newpoints\Core\templates_get_plugin;
+
+use const Newpoints\BumpThread\ROOT;
+
 function global_start(): bool
 {
     if (THIS_SCRIPT == 'showthread.php') {
@@ -134,7 +138,7 @@ function showthread_start09(): bool
             $title = $lang->sprintf($lang->newpoints_bump_thread_last, $lastpostbump);
         }
 
-        $newpoints_bump_thread = eval(templates_get('bump_thread'));
+        $newpoints_bump_thread = eval(newpoints_bump_thread_get_template('showthread_button'));
     }
 
     if ($mybb->get_input('action') != 'bump') {

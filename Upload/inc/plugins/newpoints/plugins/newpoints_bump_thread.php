@@ -26,6 +26,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 
+declare(strict_types=1);
+
 use function Newpoints\BumpThread\Admin\plugin_activation;
 use function Newpoints\BumpThread\Admin\plugin_deactivation;
 use function Newpoints\BumpThread\Admin\plugin_information;
@@ -33,6 +35,9 @@ use function Newpoints\BumpThread\Admin\plugin_installation;
 use function Newpoints\BumpThread\Admin\plugin_is_installed;
 use function Newpoints\BumpThread\Admin\plugin_uninstallation;
 use function Newpoints\Core\add_hooks;
+
+use function Newpoints\Core\templates_get;
+use function Newpoints\Core\templates_get_plugin;
 
 use const Newpoints\BumpThread\ROOT;
 use const Newpoints\ROOT_PLUGINS;
@@ -86,4 +91,9 @@ function newpoints_bump_thread_uninstall(): bool
 function newpoints_bump_thread_is_installed(): bool
 {
     return plugin_is_installed();
+}
+
+function newpoints_bump_thread_get_template(string $template_name = '', bool $enable_html_comments = true): string
+{
+    return templates_get($template_name, $enable_html_comments, ROOT, 'bump_thread_');
 }
