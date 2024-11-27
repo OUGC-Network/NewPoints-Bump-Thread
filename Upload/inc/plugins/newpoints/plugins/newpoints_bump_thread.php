@@ -29,7 +29,6 @@
 declare(strict_types=1);
 
 use function Newpoints\BumpThread\Admin\plugin_activation;
-use function Newpoints\BumpThread\Admin\plugin_deactivation;
 use function Newpoints\BumpThread\Admin\plugin_information;
 use function Newpoints\BumpThread\Admin\plugin_installation;
 use function Newpoints\BumpThread\Admin\plugin_is_installed;
@@ -37,7 +36,6 @@ use function Newpoints\BumpThread\Admin\plugin_uninstallation;
 use function Newpoints\Core\add_hooks;
 
 use function Newpoints\Core\templates_get;
-use function Newpoints\Core\templates_get_plugin;
 
 use const Newpoints\BumpThread\ROOT;
 use const Newpoints\ROOT_PLUGINS;
@@ -62,7 +60,6 @@ require_once ROOT . '/hooks/shared.php';
 
 add_hooks('Newpoints\BumpThread\Hooks\Shared');
 
-/*** Newpoints ACP side. ***/
 function newpoints_bump_thread_info(): array
 {
     return plugin_information();
@@ -71,11 +68,6 @@ function newpoints_bump_thread_info(): array
 function newpoints_bump_thread_activate(): bool
 {
     return plugin_activation();
-}
-
-function newpoints_bump_thread_deactivate(): bool
-{
-    return plugin_deactivation();
 }
 
 function newpoints_bump_thread_install(): bool

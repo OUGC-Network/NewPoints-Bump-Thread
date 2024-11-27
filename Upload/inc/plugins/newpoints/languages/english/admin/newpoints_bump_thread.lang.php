@@ -2,13 +2,13 @@
 
 /***************************************************************************
  *
- *    Newpoints Bump Thread plugin (/inc/plugins/newpoints/newpoints_bump_thread.php)
+ *    Newpoints Bump Thread plugin (/inc/plugins/newpoints/languages/english/admin/newpoints_bump_thread.lang.php)
  *    Author: Omar Gonzalez
- *    Copyright: � 2012-2015 Omar Gonzalez
+ *    Copyright: © 2012 Omar Gonzalez
  *
- *    Website: http://omarg.me
+ *    Website: https://ougc.network
  *
- *    Allows users to bump their own threads without postingon exchange of points.
+ *    Allows users to bump their own threads for a price.
  *
  ***************************************************************************
  ****************************************************************************
@@ -26,26 +26,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 
-$l['newpoints_bump_thread'] = 'Bump Thread';
-$l['newpoints_bump_thread_desc'] = 'Allows users to bump their own threads without postingon exchange of points.';
-$l['newpoints_bump_thread_credits'] = 'Original plugin coded by <a href="http://mybbhacks.zingaburga.com/member.php?action=profile&uid=1">Zinga Burga from MyBBHacks</a>.';
+$l = [
+    'newpoints_bump_thread' => 'Bump Thread',
+    'newpoints_bump_thread_desc' => 'Allows users to bump their own threads for a price.',
+    'newpoints_bump_thread_credits' => 'Original plugin coded by <a href="https://mybbhacks.zingaburga.com/member.php?action=profile&uid=1">Zinga Burga from MyBBHacks</a>.',
 
-$l['setting_newpoints_bump_thread_interval'] = 'Time Between Bumps';
-$l['setting_newpoints_bump_thread_interval_desc'] = 'The time (in minutes) a user must wait before they are allowed to (re) bump their thread.';
-$l['setting_newpoints_bump_thread_forums'] = 'Allowed Forums';
-$l['setting_newpoints_bump_thread_forums_desc'] = 'Insert a comma separated list of forums where this feature can be use in. Empty = all.';
-$l['setting_newpoints_bump_thread_groups'] = 'Allowed Groups';
-$l['setting_newpoints_bump_thread_groups_desc'] = 'Insert a comma separated list of groups that can use this feature. Empty = all.';
-$l['setting_newpoints_bump_thread_points'] = 'Points to Subtract';
-$l['setting_newpoints_bump_thread_points_desc'] = 'Points to subtract when users bump their threads.';
+    'setting_newpoints_bump_thread_price' => 'Price For Bumping Threads',
+    'setting_newpoints_bump_thread_price_desc' => 'Select the amount of points for users to pay for each thread bump they make.',
+    'setting_newpoints_bump_thread_allow_closed_threads' => 'Allow Closed Threads',
+    'setting_newpoints_bump_thread_allow_closed_threads_desc' => 'Allow users to bump closed threads.',
+    'setting_newpoints_bump_thread_allow_moderator_bypass' => 'Allow Moderator Bypass',
+    'setting_newpoints_bump_thread_allow_moderator_bypass_desc' => 'Allow moderators to bump threads in the forums they moderate.',
 
-$l['newpoints_bump_thread_forumrate'] = 'Bump: Rate';
-$l['newpoints_bump_thread_forumrate_desc'] = 'Enter the bump rate for the this forum. Default is 1';
-$l['newpoints_bump_thread_grouprate'] = 'Bump: Rate';
-$l['newpoints_bump_thread_grouprate_desc'] = 'Enter the bump rate for the this group. Default is 1';
-$l['newpoints_bump_groupforums'] = 'Bump: Allowed Forums';
-$l['newpoints_bump_groupforums_desc'] = 'Insert a comma separated list of forums where this group can use this feature in. Default is empty.';
-$l['newpoints_bump_forumgroups'] = 'Bump: Allowed Groups';
-$l['newpoints_bump_forumgroups_desc'] = 'Insert a comma separated list of groups that can use this feature in this forum. Default is empty.';
-$l['newpoints_bump_thread_interval'] = 'Bump: Time Between Bumps';
-$l['newpoints_bump_thread_interval_desc'] = 'Enter the time users must wait before bumping threads.';
+    'newpoints_forums_bump_thread_enable' => 'Yes, allow users to bump threads',
+    'newpoints_forums_bump_thread_rate' => 'Thread Bump Rate<br /><small class="input">Set a rate that will be applied to thread bumps in this forum. </small><br />',
+
+    'newpoints_user_groups_bump_thread_can_use' => 'Can bump threads?',
+    'newpoints_user_groups_bump_thread_interval' => 'Thread Bump Interval<br /><small class="input">Number of minutes between each thread bump. <code style="color: darkorange;">Lowest from all groups.</code> </small><br />',
+];

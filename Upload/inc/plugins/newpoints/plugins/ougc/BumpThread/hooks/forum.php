@@ -8,7 +8,7 @@
  *
  *    Website: https://ougc.network
  *
- *    Allows users to bump their own threads without posting on exchange of points.
+ *    Allows users to bump their own threads for a price.
  *
  ***************************************************************************
  ****************************************************************************
@@ -31,165 +31,129 @@ declare(strict_types=1);
 namespace Newpoints\BumpThread\Hooks\Forum;
 
 use function Newpoints\Core\get_setting;
+use function Newpoints\Core\group_permission_get_lowest;
 use function Newpoints\Core\language_load;
 use function Newpoints\Core\control_db;
+use function Newpoints\Core\log_add;
 use function Newpoints\Core\points_add;
-use function Newpoints\Core\templates_get;
 
-use function Newpoints\Core\templates_get_plugin;
-
-use const Newpoints\BumpThread\ROOT;
-
-function global_start(): bool
+function newpoints_global_start(array &$hook_arguments): array
 {
-    if (THIS_SCRIPT == 'showthread.php') {
-        global $templatelist;
+    global $mybb;
 
-        if (isset($templatelist)) {
-            $templatelist .= ',';
-        } else {
-            $templatelist = '';
-        }
+    $hook_arguments['showthread.php'][] = 'newpoints_bump_thread';
 
-        $templatelist .= 'newpoints_bump_thread';
-    }
-
-    return true;
+    return $hook_arguments;
 }
 
 function showthread_start09(): bool
 {
-    global $thread, $mybb, $lang;
+    global $mybb;
+    global $forum, $thread;
+    global $newpoints_bump_thread;
 
-    language_load('bump_thread');
+    $newpoints_bump_thread = '';
 
-    if ($thread['closed']) {
+    if (
+        empty($forum['newpoints_bump_thread_enable']) ||
+        empty($mybb->usergroup['newpoints_bump_thread_can_use']) ||
+        (!empty($thread['closed']) && !get_setting('bump_thread_allow_closed_threads'))
+    ) {
         return false;
     }
 
-    // Get newpoints rules
-    $forumrules = newpoints_getrules('forum', $thread['fid']);
+    $user_id = (int)$mybb->user['uid'];
 
-    $groupsrules = newpoints_getrules('group', $mybb->user['usergroup']);
+    $is_author = (int)$thread['uid'] === $user_id;
 
-    if (isset($groupsrules['bumps_forums'])) {
-        $mybb->settings['newpoints_bump_thread_forums'] = $groupsrules['bumps_forums'];
+    $is_moderator = false;
+
+    if (get_setting('bump_thread_allow_moderator_bypass') && is_moderator($forum['fid'])) {
+        $is_moderator = true;
     }
 
-    if (!is_member(get_setting('bump_thread_forums'), ['usergroup' => $thread['fid'], 'additionalgroups' => ''])) {
-        return false;
-    }
+    $thread_id = (int)$thread['tid'];
 
-    if (isset($forumrules['bumps_groups'])) {
-        $mybb->settings['newpoints_bump_thread_groups'] = $forumrules['bumps_groups'];
-    }
+    global $lang;
 
-    if (!is_member(get_setting('bump_thread_groups'))) {
-        return false;
-    }
+    if ($mybb->get_input('action') !== 'bump_thread' && ($is_author || $is_moderator)) {
+        language_load('bump_thread');
 
-    // Interval time
-    // The issue here is, should we use the largest interval ratio or the lowest one? This is "easy" to solve, allowing administrators to make use of the "-" sign inside the value to determine how it should work.
-    // The real issue, is if whether forum or groups rules should be checked before any other, the order can modify the end result. I decided to go with forum rule first.
-    $interval = (int)get_setting('bump_thread_interval');
+        $thread_link = get_thread_link($thread_id, 0, 'bump_thread');
 
-    if (isset($forumrules['bumps_interval']) && $forumrules['bumps_interval'] >= 0) {
-        $finterval = (int)$forumrules['bumps_interval'];
+        $title = $lang->newpoints_bump_thread_show_thread_button;
 
-        if (my_strpos($forumrules['bumps_interval'], '-')) {
-            $overwrite = ($finterval < $interval);
-        } else {
-            $overwrite = ($finterval > $interval);
-        }
-
-        if ($overwrite) {
-            $interval = $finterval;
-        }
-    }
-
-    if (isset($groupsrules['bumps_interval']) && $groupsrules['bumps_interval'] >= 0) {
-        $ginterval = (int)$groupsrules['bumps_interval'];
-
-        if (my_strpos($groupsrules['bumps_interval'], '-')) {
-            $overwrite = ($ginterval < $interval);
-        } else {
-            $overwrite = ($ginterval > $interval);
-        }
-
-        if ($overwrite) {
-            $interval = $ginterval;
-        }
-    }
-
-    $lastpostbump = my_date('relative', $thread['lastpostbump']);
-
-    $threadlink = get_thread_link($thread['tid'], 0, 'bump');
-
-    // Show the button.
-    if ($permission = (is_moderator($thread['fid']) || ($mybb->user['uid'] && $thread['uid'] == $mybb->user['uid']))) {
-        global $templates, $theme, $newpoints_bump_thread;
-
-        $title = $lang->newpoints_bump_thread;
-
-        if ($thread['lastpostbump'] + $interval * 60 > TIME_NOW) {
-            $title = $lang->sprintf($lang->newpoints_bump_thread_last, $lastpostbump);
+        if (!empty($thread['newpoints_bump_thread_stamp'])) {
+            $title = strip_tags(
+                $lang->sprintf(
+                    $lang->newpoints_bump_thread_show_thread_button_title,
+                    my_date('relative', $thread['newpoints_bump_thread_stamp'])
+                )
+            );
         }
 
         $newpoints_bump_thread = eval(newpoints_bump_thread_get_template('showthread_button'));
     }
 
-    if ($mybb->get_input('action') != 'bump') {
-        return false;
-    }
+    if ($mybb->get_input('action') === 'bump_thread' && ($is_author || $is_moderator)) {
+        language_load('bump_thread');
 
-    // Request
-    if ($permission) {
-        // Set $points based in groupsrules and forumrules.
-        $points = (float)get_setting(
-                'bump_thread_points'
-            ) * (float)($groupsrules['bumps_rate'] ?? 1) * (float)($forumrules['bumps_rate'] ?? 1);
+        $bump_price = get_setting('bump_thread_price') * $forum['newpoints_bump_thread_rate'];
 
-        // If is thread author and required points are higher that current user points, show error page.
-        if ($thread['uid'] == $mybb->user['uid'] && $points > (float)$mybb->user['newpoints']) {
-            error($lang->sprintf($lang->newpoints_bump_thread_error_points, newpoints_format_points($points)));
+        $user_points = (float)$mybb->user['newpoints'];
+
+        if ($is_author && $bump_price > $user_points) {
+            error(
+                $lang->sprintf(
+                    $lang->newpoints_bump_thread_error_price,
+                    newpoints_format_points($bump_price),
+                    newpoints_format_points($user_points)
+                )
+            );
         }
 
-        // Is the last bump was not so long ago (from settings), show error.
-        if ($thread['lastpostbump'] + $interval * 60 > TIME_NOW || $mybb->user['lastpostbump'] + $interval * 60 > TIME_NOW) {
-            error($lang->sprintf($lang->newpoints_bump_thread_error_interval, my_number_format($interval)));
+        $interval_minutes = group_permission_get_lowest('newpoints_bump_thread_interval');
+
+        $interval_seconds = $interval_minutes * 60;
+
+        if ($thread['newpoints_bump_thread_stamp'] + $interval_seconds > TIME_NOW || $mybb->user['newpoints_bump_thread_last_stamp'] + $interval_seconds > TIME_NOW) {
+            error(
+                $lang->sprintf(
+                    $lang->newpoints_bump_thread_error_interval,
+                    my_number_format($interval_minutes)
+                )
+            );
         }
 
-        // They passed trow here, so lets bump the thread!!
         global $db;
 
-        $db->update_query('threads', ['lastpostbump' => TIME_NOW], 'tid=' . (int)$thread['tid']);
+        $db->update_query('threads', ['newpoints_bump_thread_stamp' => TIME_NOW], "tid='{$thread_id}'");
 
-        $db->update_query('users', ['lastpostbump' => TIME_NOW], 'uid=' . (int)$mybb->user['uid']);
+        $db->update_query('users', ['newpoints_bump_thread_last_stamp' => TIME_NOW], "uid='{$user_id}'");
 
-        $db->delete_query('forumsread', 'fid=\'' . (int)$thread['fid'] . '\''); // someone might complain..
+        $forum_id = (int)$thread['fid'];
 
-        $db->delete_query('threadsread', 'tid=\'' . (int)$thread['tid'] . '\'');
-        // need we to modify search queries? may be..
+        $db->delete_query('forumsread', "fid='{$forum_id}'");
 
-        // If current user is thread author, remove points, otherwise, don't (so admins/global_mods can bump as much threads how they want, as long as they are not the original authors).
-        if ($thread['uid'] == $mybb->user['uid']) {
-            points_add($mybb->user['uid'], -$points);
+        $db->delete_query('threadsread', "tid='{$thread_id}'");
+
+        if ($is_author) {
+            points_add($user_id, -$bump_price);
         }
 
-        $threadlink = get_thread_link($thread['tid']);
-
-        // Log it.
-        newpoints_log(
-            'bump',
-            $mybb->settings['bburl'] . '/' . $threadlink,
-            $mybb->user['username'],
-            $mybb->user['uid']
+        log_add(
+            'bump_thread',
+            "tid:{$thread_id};price:{$bump_price}",
+            $mybb->user['username'] ?? '',
+            $user_id
         );
 
-        redirect($threadlink, $lang->newpoints_bump_thread_success_message, $lang->newpoints_bump_thread_success_title);
+        redirect(
+            get_thread_link($thread_id),
+            $lang->newpoints_bump_thread_success_message,
+            $lang->newpoints_bump_thread_success_title
+        );
     }
-
-    error_no_permission();
 
     return true;
 }
@@ -203,29 +167,19 @@ function forumdisplay_start09(): bool
         $mybb->input['sortby'] = $foruminfo['defaultsortby'];
     }
 
-    switch ($mybb->get_input('sortby')) {
-        case 'subject':
-        case 'replies':
-        case 'views':
-        case 'starter':
-        case 'rating':
-        case 'started':
-            break;
-        default:
-            control_db(
-                '
-				function query($string, $hide_errors=0, $write_query=0)
-				{
-					if(!$done && strpos($string, \'t.sticky\') !== false && strpos($string, \'lastpost\') !== false)
-					{
-						$string = str_replace(array("lastpost ", "t.lastpost "), array("lastpostbump ", "t.lastpostbump "), $string);
-					}
+    if (!in_array($mybb->get_input('sortby'), ['subject', 'replies', 'views', 'starter', 'rating', 'started'])) {
+        control_db(
+            'function query($string, $hide_errors = 0, $write_query = 0)
+{
+    if (my_strpos($string, "t.sticky") !== false && my_strpos($string, "lastpost") !== false) {
+        $string = str_replace(["lastpost ", "t.lastpost "],
+            ["newpoints_bump_thread_stamp ", "t.newpoints_bump_thread_stamp "],
+            $string);
+    }
 
-					return parent::query($string, $hide_errors, $write_query);
-				}
-			'
-            );
-            break;
+    return parent::query($string, $hide_errors, $write_query);
+}'
+        );
     }
 
     return true;

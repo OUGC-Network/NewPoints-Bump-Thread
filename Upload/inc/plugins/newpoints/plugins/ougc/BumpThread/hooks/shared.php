@@ -8,7 +8,7 @@
  *
  *    Website: https://ougc.network
  *
- *    Allows users to bump their own threads without posting on exchange of points.
+ *    Allows users to bump their own threads for a price.
  *
  ***************************************************************************
  ****************************************************************************
@@ -32,18 +32,24 @@ namespace Newpoints\BumpThread\Hooks\Shared;
 
 use postDataHandler;
 
-function datahandler_post_insert_post(postDataHandler &$data_handler): postDataHandler
+function datahandler_post_insert_post_end(postDataHandler &$data_handler): postDataHandler
 {
-    global $db;
+    if (!empty($data_handler->return_values['visible'])) {
+        global $db;
 
-    $db->update_query('threads', ['lastpostbump' => TIME_NOW], 'tid=' . (int)$data_handler->data['tid']);
+        $db->update_query(
+            'threads',
+            ['newpoints_bump_thread_stamp' => (int)$data_handler->data['dateline']],
+            'tid=' . (int)$data_handler->data['tid']
+        );
+    }
 
     return $data_handler;
 }
 
 function datahandler_post_insert_thread(postDataHandler &$data_handler): postDataHandler
 {
-    $data_handler->thread_insert_data['lastpostbump'] = (int)$data_handler->data['dateline'];
+    $data_handler->thread_insert_data['newpoints_bump_thread_stamp'] = (int)$data_handler->data['dateline'];
 
     return $data_handler;
 }

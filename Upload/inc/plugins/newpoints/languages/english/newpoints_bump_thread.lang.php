@@ -2,13 +2,13 @@
 
 /***************************************************************************
  *
- *    Newpoints Bump Thread plugin (/inc/plugins/newpoints/newpoints_bump_thread.php)
+ *    Newpoints Bump Thread plugin (/inc/plugins/newpoints/languages/english/newpoints_bump_thread.lang.php)
  *    Author: Omar Gonzalez
- *    Copyright: � 2012-2015 Omar Gonzalez
+ *    Copyright: © 2012 Omar Gonzalez
  *
- *    Website: http://omarg.me
+ *    Website: https://ougc.network
  *
- *    Allows users to bump their own threads without postingon exchange of points.
+ *    Allows users to bump their own threads for a price.
  *
  ***************************************************************************
  ****************************************************************************
@@ -26,10 +26,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 
-$l['newpoints_bump_thread'] = 'Bump Thread';
+$l = [
+    'newpoints_bump_thread' => 'Bump Thread',
+    
+    'newpoints_bump_thread_show_thread_button' => 'Bump Thread',
+    'newpoints_bump_thread_show_thread_button_title' => 'Last bump on: {1}',
 
-$l['newpoints_bump_thread_last'] = 'Last Bump: {1}';
-$l['newpoints_bump_thread_success_title'] = 'Thread Bumped Successfully.';
-$l['newpoints_bump_thread_success_message'] = 'The thread was bumped successfully.<br /><br />Now you will be redirected back to the thread.';
-$l['newpoints_bump_thread_error_interval'] = 'Sorry but you cannot bump this thread within {1} minute(s) of its last bump.';
-$l['newpoints_bump_thread_error_points'] = 'Sorry but you need at least {1} points to pay for this.';
+    'newpoints_bump_thread_error_price' => 'You need at least {1} to bump this thread, you currently hava {2}.',
+    'newpoints_bump_thread_error_interval' => 'You must wait {1} minutes before you can bump this thread.',
+
+    'newpoints_bump_thread_success_title' => 'Thread bumped successfully',
+    'newpoints_bump_thread_success_message' => 'The thread was bumped successfully.<br /><br />Now you will be redirected back to the thread.',
+];

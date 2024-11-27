@@ -8,7 +8,7 @@
  *
  *    Website: https://ougc.network
  *
- *    Allows users to bump their own threads without posting on exchange of points.
+ *    Allows users to bump their own threads for a price.
  *
  ***************************************************************************
  ****************************************************************************
@@ -30,63 +30,62 @@ declare(strict_types=1);
 
 namespace Newpoints\BumpThread\Admin;
 
+use function Newpoints\Admin\db_build_field_definition;
 use function Newpoints\Admin\db_verify_columns;
-use function Newpoints\Admin\plugin_library_load;
 use function Newpoints\Core\language_load;
 use function Newpoints\Core\log_remove;
-use function Newpoints\Core\rules_rebuild_cache;
-use function Newpoints\Core\settings_rebuild;
 use function Newpoints\Core\settings_remove;
-use function Newpoints\Core\templates_rebuild;
 use function Newpoints\Core\templates_remove;
 
 const FIELDS_DATA = [
     'threads' => [
-        'lastpostbump' => [
+        'newpoints_bump_thread_stamp' => [
             'type' => 'INT',
             'unsigned' => true,
             'default' => 0
         ],
     ],
     'users' => [
-        'lastpostbump' => [
+        'newpoints_bump_thread_last_stamp' => [
             'type' => 'INT',
             'unsigned' => true,
             'default' => 0
         ],
     ],
-    'newpoints_grouprules' => [
-        'bumps_rate' => [
-            'type' => 'FLOAT',
+    'usergroups' => [
+        'newpoints_bump_thread_can_use' => [
+            'type' => 'TINYINT',
             'unsigned' => true,
-            'default' => 1
+            'default' => 1,
+            'formType' => 'checkBox'
         ],
-        'bumps_forums' => [
-            'type' => 'TEXT',
-            'null' => true,
-            'default' => '',
-        ],
-        'bumps_interval' => [
+        'newpoints_bump_thread_interval' => [
             'type' => 'INT',
             'unsigned' => true,
-            'default' => 0
+            'default' => 60,
+            'formType' => 'numericField',
+            'formOptions' => [
+                //'min' => 0,
+                //'step' => 0.01,
+            ]
         ],
     ],
-    'newpoints_forumrules' => [
-        'bumps_rate' => [
+    'forums' => [
+        'newpoints_bump_thread_enable' => [
+            'type' => 'TINYINT',
+            'unsigned' => true,
+            'default' => 1,
+            'formType' => 'checkBox'
+        ],
+        'newpoints_bump_thread_rate' => [
             'type' => 'FLOAT',
             'unsigned' => true,
-            'default' => 1
-        ],
-        'bumps_groups' => [
-            'type' => 'TEXT',
-            'null' => true,
-            'default' => '',
-        ],
-        'bumps_interval' => [
-            'type' => 'INT',
-            'unsigned' => true,
-            'default' => 0
+            'default' => 1,
+            'formType' => 'numericField',
+            'formOptions' => [
+                //'min' => 0,
+                'step' => 0.01,
+            ]
         ],
     ]
 ];
@@ -133,23 +132,69 @@ function plugin_activation(): bool
         $plugins_list['newpoints_bump_thread'] = $plugin_information['versioncode'];
     }
 
-    db_verify_columns(FIELDS_DATA);
-
-    rules_rebuild_cache();
-
     /*~*~* RUN UPDATES START *~*~*/
 
+    if ($plugins_list['newpoints_bump_thread'] < 3000) {
+        global $db;
+
+        foreach (
+            [
+                'newpoints_grouprules' => ['bumps_interval', 'bumps_rate', 'bumps_forums'],
+                'newpoints_forumrules' => ['bumps_interval', 'bumps_rate', 'bumps_groups'],
+            ] as $table_name => $table_columns
+        ) {
+            if ($db->table_exists($table_name)) {
+                foreach ($table_columns as $field_name => $field_data) {
+                    if ($db->field_exists($field_name, $table_name)) {
+                        $db->drop_column($table_name, $field_name);
+                    }
+                }
+            }
+        }
+
+        if ($db->field_exists('lastpostbump', 'threads') && !$db->field_exists(
+                'newpoints_bump_thread_stamp',
+                'threads'
+            )) {
+            $db->rename_column(
+                'threads',
+                'lastpostbump',
+                'newpoints_bump_thread_stamp',
+                db_build_field_definition(FIELDS_DATA['threads']['newpoints_bump_thread_stamp'])
+            );
+        }
+
+        if ($db->field_exists('lastpostbump', 'users') && !$db->field_exists(
+                'newpoints_bump_thread_last_stamp',
+                'users'
+            )) {
+            $db->rename_column(
+                'users',
+                'lastpostbump',
+                'newpoints_bump_thread_last_stamp',
+                db_build_field_definition(FIELDS_DATA['users']['newpoints_bump_thread_last_stamp'])
+            );
+        }
+
+        settings_remove(
+            [
+                'interval',
+                'forums',
+                'groups',
+                'points'
+            ],
+            'newpoints_bump_thread_'
+        );
+    }
+
     /*~*~* RUN UPDATES END *~*~*/
+
+    db_verify_columns(FIELDS_DATA);
 
     $plugins_list['newpoints_bump_thread'] = $plugin_information['versioncode'];
 
     $cache->update('ougc_plugins', $plugins_list);
 
-    return true;
-}
-
-function plugin_deactivation(): bool
-{
     return true;
 }
 
@@ -159,7 +204,7 @@ function plugin_installation(): bool
 
     db_verify_columns(FIELDS_DATA);
 
-    $db->update_query('threads', ['lastpostbump' => '`lastpost`'], '', '', true);
+    $db->update_query('threads', ['newpoints_bump_thread_stamp' => '`lastpost`'], '', '', true);
 
     return true;
 }
@@ -189,7 +234,7 @@ function plugin_uninstallation(): bool
 {
     global $db, $cache;
 
-    log_remove(['bump']);
+    log_remove(['bump_thread', 'bump']);
 
     foreach (FIELDS_DATA as $table_name => $table_columns) {
         if ($db->table_exists($table_name)) {
@@ -203,10 +248,8 @@ function plugin_uninstallation(): bool
 
     settings_remove(
         [
-            'interval',
-            'forums',
-            'groups',
-            'points'
+            'price',
+            'allow_closed_threads'
         ],
         'newpoints_bump_thread_'
     );
