@@ -36,5 +36,5 @@ $l = [
     'newpoints_bump_thread_error_interval' => 'Debes esperar {1} minutos antes de poder revivir esta discusión.',
 
     'newpoints_bump_thread_success_title' => 'Discusión revividada con éxito',
-    'newpoints_bump_thread_success_message' => 'La disusión ha sido revivida con éxito.<br /><br />Ahora serás redirigido de vuelta a la discusión.',
+    'newpoints_bump_thread_success_message' => 'La disusión ha sido revivida con éxito.<br />Ahora serás redirigido de vuelta a la discusión.',
 ];

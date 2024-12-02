@@ -28,7 +28,7 @@
 
 $l = [
     'newpoints_bump_thread' => 'Bump Thread',
-    
+
     'newpoints_bump_thread_show_thread_button' => 'Bump Thread',
     'newpoints_bump_thread_show_thread_button_title' => 'Last bump on: {1}',
 
@@ -36,5 +36,5 @@ $l = [
     'newpoints_bump_thread_error_interval' => 'You must wait {1} minutes before you can bump this thread.',
 
     'newpoints_bump_thread_success_title' => 'Thread bumped successfully',
-    'newpoints_bump_thread_success_message' => 'The thread was bumped successfully.<br /><br />Now you will be redirected back to the thread.',
+    'newpoints_bump_thread_success_message' => 'The thread was bumped successfully.<br />Now you will be redirected back to the thread.',
 ];

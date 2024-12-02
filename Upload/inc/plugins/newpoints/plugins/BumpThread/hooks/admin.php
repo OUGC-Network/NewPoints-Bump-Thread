@@ -51,11 +51,6 @@ function newpoints_templates_rebuild_start(array $hook_arguments): array
 
 function newpoints_admin_user_groups_edit_graph_start(array &$hook_arguments): array
 {
-    return newpoints_admin_user_groups_edit_commit_start($hook_arguments);
-}
-
-function newpoints_admin_user_groups_edit_commit_start(array &$hook_arguments): array
-{
     language_load('bump_thread');
 
     $hook_arguments['data_fields'] = array_merge(
@@ -64,6 +59,11 @@ function newpoints_admin_user_groups_edit_commit_start(array &$hook_arguments): 
     );
 
     return $hook_arguments;
+}
+
+function newpoints_admin_user_groups_edit_commit_start(array &$hook_arguments): array
+{
+    return newpoints_admin_user_groups_edit_graph_start($hook_arguments);
 }
 
 function newpoints_admin_formcontainer_end_start(array &$hook_arguments): array
