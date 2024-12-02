@@ -121,8 +121,7 @@ function plugin_activation(): bool
 
     $plugin_information = plugin_information();
 
-    // Insert/update version into cache
-    $plugins_list = $cache->read('ougc_plugins');
+    $plugins_list = $cache->read('newpoints_plugins_versions');
 
     if (!$plugins_list) {
         $plugins_list = [];
@@ -193,7 +192,7 @@ function plugin_activation(): bool
 
     $plugins_list['newpoints_bump_thread'] = $plugin_information['versioncode'];
 
-    $cache->update('ougc_plugins', $plugins_list);
+    $cache->update('newpoints_plugins_versions', $plugins_list);
 
     return true;
 }
@@ -257,16 +256,16 @@ function plugin_uninstallation(): bool
     templates_remove(['showthread_button'], 'newpoints_bump_thread_');
 
     // Delete version from cache
-    $plugins_list = (array)$cache->read('ougc_plugins');
+    $plugins_list = (array)$cache->read('newpoints_plugins_versions');
 
     if (isset($plugins_list['newpoints_bump_thread'])) {
         unset($plugins_list['newpoints_bump_thread']);
     }
 
     if (!empty($plugins_list)) {
-        $cache->update('ougc_plugins', $plugins_list);
+        $cache->update('newpoints_plugins_versions', $plugins_list);
     } else {
-        $cache->delete('ougc_plugins');
+        $cache->delete('newpoints_plugins_versions');
     }
 
     return true;

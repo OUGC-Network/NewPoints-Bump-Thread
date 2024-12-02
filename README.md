@@ -63,6 +63,7 @@ A setup that meets the following requirements is necessary to use this plugin.
    │ │ │ │ ├── english
    │ │ │ │ │ ├── admin
    │ │ │ │ │ │ ├── newpoints_bump_thread.lang.php
+   │ │ │ │ │ ├── newpoints_bump_thread.lang.php
    │ │ │ │ ├── espanol
    │ │ │ │ │ ├── admin
    │ │ │ │ │ │ ├── newpoints_bump_thread.lang.php
@@ -147,7 +148,7 @@ Two new settings are added to forums.
 
 ### Groups <a name="usage_groups"></a>
 
-Two new settings are added to forums.
+Two new settings are added to groups.
 
 - **Can bump threads?**
 - **Thread Bump Interval**

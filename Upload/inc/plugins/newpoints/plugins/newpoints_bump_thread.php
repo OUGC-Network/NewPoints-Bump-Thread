@@ -42,7 +42,7 @@ use const Newpoints\ROOT_PLUGINS;
 
 defined('IN_MYBB') || die('Direct initialization of this file is not allowed.');
 
-define('Newpoints\BumpThread\ROOT', ROOT_PLUGINS . '/ougc/BumpThread');
+define('Newpoints\BumpThread\ROOT', ROOT_PLUGINS . '/BumpThread');
 
 if (defined('IN_ADMINCP')) {
     require_once ROOT . '/admin.php';
