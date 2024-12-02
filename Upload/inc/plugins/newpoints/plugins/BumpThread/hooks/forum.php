@@ -39,9 +39,7 @@ use function Newpoints\Core\points_add;
 
 function newpoints_global_start(array &$hook_arguments): array
 {
-    global $mybb;
-
-    $hook_arguments['showthread.php'][] = 'newpoints_bump_thread';
+    $hook_arguments['showthread.php'][] = 'newpoints_bump_thread_showthread_button';
 
     return $hook_arguments;
 }

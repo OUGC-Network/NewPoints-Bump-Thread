@@ -51,18 +51,13 @@ function newpoints_templates_rebuild_start(array $hook_arguments): array
 
 function newpoints_admin_user_groups_edit_graph_start(array &$hook_arguments): array
 {
-    language_load('bump_thread');
-
-    $hook_arguments['data_fields'] = array_merge(
-        $hook_arguments['data_fields'],
-        FIELDS_DATA['usergroups']
-    );
-
-    return $hook_arguments;
+    return newpoints_admin_user_groups_edit_commit_start($hook_arguments);
 }
 
 function newpoints_admin_user_groups_edit_commit_start(array &$hook_arguments): array
 {
+    language_load('bump_thread');
+
     $hook_arguments['data_fields'] = array_merge(
         $hook_arguments['data_fields'],
         FIELDS_DATA['usergroups']
@@ -73,18 +68,13 @@ function newpoints_admin_user_groups_edit_commit_start(array &$hook_arguments): 
 
 function newpoints_admin_formcontainer_end_start(array &$hook_arguments): array
 {
-    language_load('bump_thread');
-
-    $hook_arguments['data_fields'] = array_merge(
-        $hook_arguments['data_fields'],
-        FIELDS_DATA['forums']
-    );
-
-    return $hook_arguments;
+    return newpoints_admin_forum_management_edit_commit_start($hook_arguments);
 }
 
 function newpoints_admin_forum_management_edit_commit_start(array &$hook_arguments): array
 {
+    language_load('bump_thread');
+
     $hook_arguments['data_fields'] = array_merge(
         $hook_arguments['data_fields'],
         FIELDS_DATA['forums']
