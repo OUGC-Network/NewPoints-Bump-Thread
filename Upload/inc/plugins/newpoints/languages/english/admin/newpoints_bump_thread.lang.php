@@ -31,6 +31,8 @@ $l = [
     'newpoints_bump_thread_desc' => 'Allows users to bump their own threads for a price.',
     'newpoints_bump_thread_credits' => 'Original plugin coded by <a href="https://mybbhacks.zingaburga.com/member.php?action=profile&uid=1">Zinga Burga from MyBBHacks</a>.',
 
+    'setting_group_newpoints_bump_thread' => 'Bump Thread',
+    'setting_group_newpoints_bump_thread_desc' => 'Allows users to bump their own threads for a price.',
     'setting_newpoints_bump_thread_price' => 'Price For Bumping Threads',
     'setting_newpoints_bump_thread_price_desc' => 'Select the amount of points for users to pay for each thread bump they make.',
     'setting_newpoints_bump_thread_allow_closed_threads' => 'Allow Closed Threads',

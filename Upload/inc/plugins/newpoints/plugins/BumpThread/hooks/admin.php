@@ -37,6 +37,8 @@ use const Newpoints\BumpThread\ROOT;
 
 function newpoints_settings_rebuild_start(array $hook_arguments): array
 {
+    language_load('bump_thread');
+
     $hook_arguments['settings_directories'][] = ROOT . '/settings';
 
     return $hook_arguments;
