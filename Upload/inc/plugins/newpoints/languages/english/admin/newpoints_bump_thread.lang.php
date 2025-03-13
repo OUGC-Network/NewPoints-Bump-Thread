@@ -8,7 +8,7 @@
  *
  *    Website: https://ougc.network
  *
- *    Allows users to bump their own threads for a price.
+ *    Allows users to bump their own threads without posting on exchange of points.
  *
  ***************************************************************************
  ****************************************************************************
@@ -28,7 +28,7 @@
 
 $l = [
     'newpoints_bump_thread' => 'Bump Thread',
-    'newpoints_bump_thread_desc' => 'Allows users to bump their own threads for a price.',
+    'newpoints_bump_thread_desc' => 'Allows users to bump their own threads without posting on exchange of points.',
     'newpoints_bump_thread_credits' => 'Original plugin coded by <a href="https://mybbhacks.zingaburga.com/member.php?action=profile&uid=1">Zinga Burga from MyBBHacks</a>.',
 
     'setting_group_newpoints_bump_thread' => 'Bump Thread',

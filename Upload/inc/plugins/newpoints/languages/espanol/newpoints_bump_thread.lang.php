@@ -8,7 +8,7 @@
  *
  *    Website: https://ougc.network
  *
- *    Allows users to bump their own threads for a price.
+ *    Allows users to bump their own threads without posting on exchange of points.
  *
  ***************************************************************************
  ****************************************************************************

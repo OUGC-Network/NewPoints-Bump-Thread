@@ -8,7 +8,7 @@
  *
  *    Website: https://ougc.network
  *
- *    Allows users to bump their own threads for a price.
+ *    Allows users to bump their own threads without posting on exchange of points.
  *
  ***************************************************************************
  ****************************************************************************
@@ -30,12 +30,15 @@ declare(strict_types=1);
 
 namespace Newpoints\BumpThread\Hooks\Forum;
 
+use MyBB;
+
 use function Newpoints\Core\get_setting;
 use function Newpoints\Core\group_permission_get_lowest;
 use function Newpoints\Core\language_load;
 use function Newpoints\Core\control_db;
 use function Newpoints\Core\log_add;
 use function Newpoints\Core\points_subtract;
+use function Newpoints\Core\post_parser;
 
 use const Newpoints\Core\LOGGING_TYPE_CHARGE;
 
@@ -77,7 +80,7 @@ function showthread_start09(): bool
     if ($mybb->get_input('action') !== $action_name && ($is_author || $is_moderator)) {
         language_load('bump_thread');
 
-        $thread_link = get_thread_link($thread_id, $mybb->get_input('page', \MyBB::INPUT_INT), $action_name);
+        $thread_link = get_thread_link($thread_id, $mybb->get_input('page', MyBB::INPUT_INT), $action_name);
 
         $title = $lang->newpoints_bump_thread_show_thread_button;
 
@@ -154,7 +157,7 @@ function showthread_start09(): bool
         );
 
         redirect(
-            get_thread_link($thread_id, $mybb->get_input('page', \MyBB::INPUT_INT)),
+            get_thread_link($thread_id, $mybb->get_input('page', MyBB::INPUT_INT)),
             $lang->newpoints_bump_thread_success_message,
             $lang->newpoints_bump_thread_success_title
         );
@@ -185,6 +188,65 @@ function forumdisplay_start09(): bool
     return parent::query($string, $hide_errors, $write_query);
 }'
         );
+    }
+
+    return true;
+}
+
+function newpoints_logs_log_row(): bool
+{
+    global $log_data;
+
+    if (!in_array($log_data['action'], [
+        'bump_thread',
+    ])) {
+        return false;
+    }
+
+    global $lang;
+    global $log_action, $log_primary, $log_secondary, $log_tertiary;
+
+    language_load('bump_thread');
+
+    if ($log_data['action'] === 'bump_thread') {
+        $log_action = $lang->newpoints_bump_thread_page_logs_bump_thread;
+    }
+
+    $thread_id = (int)$log_data['log_primary_id'];
+
+    $thread_data = get_thread($thread_id);
+
+    if (empty($thread_data)) {
+        return false;
+    }
+
+    global $mybb;
+
+    $thread_subject = post_parser()->parse_badwords($thread_data['subject']);
+
+    $thread_url = get_thread_link($thread_id);
+
+    $log_primary = $lang->sprintf(
+        $lang->newpoints_bump_thread_page_logs_thread_link,
+        $mybb->settings['bburl'],
+        $thread_url,
+        $thread_subject
+    );
+
+    return true;
+}
+
+function newpoints_logs_end(): bool
+{
+    global $lang;
+    global $action_types;
+
+    language_load('bump_thread');
+
+    foreach ($action_types as $key => &$action_type) {
+        if ($key === 'bump_thread') {
+            $action_type = $lang->newpoints_bump_thread_page_logs_bump_thread;
+        }
     }
 
     return true;

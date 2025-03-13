@@ -8,7 +8,7 @@
  *
  *    Website: https://ougc.network
  *
- *    Allows users to bump their own threads for a price.
+ *    Allows users to bump their own threads without posting on exchange of points.
  *
  ***************************************************************************
  ****************************************************************************
@@ -37,4 +37,7 @@ $l = [
 
     'newpoints_bump_thread_success_title' => 'Thread bumped successfully',
     'newpoints_bump_thread_success_message' => 'The thread was bumped successfully.<br />Now you will be redirected back to the thread.',
+
+    'newpoints_bump_thread_page_logs_bump_thread' => 'Bump Thread',
+    'newpoints_bump_thread_page_logs_thread_link' => '<a href="{1}/{2}">{3}</a>',
 ];
