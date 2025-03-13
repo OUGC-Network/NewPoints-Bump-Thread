@@ -66,20 +66,18 @@ function showthread_start09(): bool
 
     $is_author = (int)$thread['uid'] === $current_user_id;
 
-    $is_moderator = false;
-
-    if (get_setting('bump_thread_allow_moderator_bypass') && is_moderator($forum['fid'])) {
-        $is_moderator = true;
-    }
+    $is_moderator = get_setting('bump_thread_allow_moderator_bypass') && is_moderator($forum['fid']);
 
     $thread_id = (int)$thread['tid'];
 
     global $lang;
 
-    if ($mybb->get_input('action') !== 'bump_thread' && ($is_author || $is_moderator)) {
+    $action_name = get_setting('bump_thread_action_name');
+
+    if ($mybb->get_input('action') !== $action_name && ($is_author || $is_moderator)) {
         language_load('bump_thread');
 
-        $thread_link = get_thread_link($thread_id, 0, 'bump_thread');
+        $thread_link = get_thread_link($thread_id, $mybb->get_input('page', \MyBB::INPUT_INT), $action_name);
 
         $title = $lang->newpoints_bump_thread_show_thread_button;
 
@@ -95,10 +93,12 @@ function showthread_start09(): bool
         $newpoints_bump_thread = eval(newpoints_bump_thread_get_template('showthread_button'));
     }
 
-    if ($mybb->get_input('action') === 'bump_thread' && ($is_author || $is_moderator)) {
+    if ($mybb->get_input('action') === $action_name && ($is_author || $is_moderator)) {
         language_load('bump_thread');
 
-        $bump_price = get_setting('bump_thread_price') * $forum['newpoints_bump_thread_rate'];
+        $bump_price = get_setting('bump_thread_price') *
+            $forum['newpoints_rate_bump_thread'] *
+            $mybb->usergroup['newpoints_rate_bump_thread'] / 100;
 
         $user_points = (float)$mybb->user['newpoints'];
 
@@ -154,7 +154,7 @@ function showthread_start09(): bool
         );
 
         redirect(
-            get_thread_link($thread_id),
+            get_thread_link($thread_id, $mybb->get_input('page', \MyBB::INPUT_INT)),
             $lang->newpoints_bump_thread_success_message,
             $lang->newpoints_bump_thread_success_title
         );

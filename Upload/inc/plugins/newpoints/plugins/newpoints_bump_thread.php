@@ -89,3 +89,11 @@ function newpoints_bump_thread_get_template(string $template_name = '', bool $en
 {
     return templates_get($template_name, $enable_html_comments, ROOT, 'bump_thread_');
 }
+
+(function () {
+    global $groupzerolesser, $grouppermbyswitch;
+
+    $groupzerolesser[] = 'newpoints_rate_bump_thread';
+
+    $grouppermbyswitch['newpoints_rate_bump_thread'] = 'newpoints_bump_thread_can_use';
+})();

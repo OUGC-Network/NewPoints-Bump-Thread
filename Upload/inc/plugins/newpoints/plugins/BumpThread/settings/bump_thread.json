@@ -1,4 +1,8 @@
 {
+  "action_name": {
+    "type": "text",
+    "value": "bump_thread"
+  },
   "price": {
     "type": "text",
     "value": 10

@@ -37,6 +37,11 @@ use function Newpoints\Core\log_remove;
 use function Newpoints\Core\settings_remove;
 use function Newpoints\Core\templates_remove;
 
+use const Newpoints\Core\FORM_TYPE_CHECK_BOX;
+use const Newpoints\Core\FORM_TYPE_NUMERIC_FIELD;
+use const Newpoints\DECIMAL_DATA_TYPE_SIZE;
+use const Newpoints\DECIMAL_DATA_TYPE_STEP;
+
 const FIELDS_DATA = [
     'threads' => [
         'newpoints_bump_thread_stamp' => [
@@ -57,17 +62,19 @@ const FIELDS_DATA = [
             'type' => 'TINYINT',
             'unsigned' => true,
             'default' => 1,
-            'formType' => 'checkBox'
+            'form_type' => FORM_TYPE_CHECK_BOX
         ],
         'newpoints_bump_thread_interval' => [
             'type' => 'INT',
             'unsigned' => true,
             'default' => 60,
-            'formType' => 'numericField',
-            'formOptions' => [
-                //'min' => 0,
-                //'step' => 0.01,
-            ]
+            'form_type' => FORM_TYPE_NUMERIC_FIELD
+        ],
+        'newpoints_rate_bump_thread' => [
+            'type' => 'INT',
+            'unsigned' => true,
+            'default' => 100,
+            'form_type' => FORM_TYPE_NUMERIC_FIELD
         ],
     ],
     'forums' => [
@@ -75,16 +82,16 @@ const FIELDS_DATA = [
             'type' => 'TINYINT',
             'unsigned' => true,
             'default' => 1,
-            'formType' => 'checkBox'
+            'form_type' => FORM_TYPE_CHECK_BOX
         ],
-        'newpoints_bump_thread_rate' => [
-            'type' => 'FLOAT',
+        'newpoints_rate_bump_thread' => [
+            'type' => 'DECIMAL',
             'unsigned' => true,
+            'size' => DECIMAL_DATA_TYPE_SIZE,
             'default' => 1,
-            'formType' => 'numericField',
-            'formOptions' => [
-                //'min' => 0,
-                'step' => 0.01,
+            'form_type' => FORM_TYPE_NUMERIC_FIELD,
+            'form_options' => [
+                'step' => DECIMAL_DATA_TYPE_STEP,
             ]
         ],
     ]
@@ -107,8 +114,8 @@ function plugin_information(): array
         'website' => 'https://ougc.network',
         'author' => 'Omar G.',
         'authorsite' => 'https://ougc.network',
-        'version' => '3.0.0',
-        'versioncode' => 3000,
+        'version' => '3.1.0',
+        'versioncode' => 3100,
         'compatibility' => '3*'
     ];
 }
@@ -151,10 +158,8 @@ function plugin_activation(): bool
             }
         }
 
-        if ($db->field_exists('lastpostbump', 'threads') && !$db->field_exists(
-                'newpoints_bump_thread_stamp',
-                'threads'
-            )) {
+        if ($db->field_exists('lastpostbump', 'threads') &&
+            !$db->field_exists('newpoints_bump_thread_stamp', 'threads')) {
             $db->rename_column(
                 'threads',
                 'lastpostbump',
@@ -163,15 +168,23 @@ function plugin_activation(): bool
             );
         }
 
-        if ($db->field_exists('lastpostbump', 'users') && !$db->field_exists(
-                'newpoints_bump_thread_last_stamp',
-                'users'
-            )) {
+        if ($db->field_exists('lastpostbump', 'users') &&
+            !$db->field_exists('newpoints_bump_thread_last_stamp', 'users')) {
             $db->rename_column(
                 'users',
                 'lastpostbump',
                 'newpoints_bump_thread_last_stamp',
                 db_build_field_definition(FIELDS_DATA['users']['newpoints_bump_thread_last_stamp'])
+            );
+        }
+
+        if ($db->field_exists('newpoints_bump_thread_rate', 'forums') &&
+            !$db->field_exists('newpoints_rate_bump_thread', 'forums')) {
+            $db->rename_column(
+                'forums',
+                'newpoints_bump_thread_rate',
+                'newpoints_rate_bump_thread',
+                db_build_field_definition(FIELDS_DATA['users']['newpoints_rate_bump_thread'])
             );
         }
 
