@@ -35,7 +35,9 @@ use function Newpoints\Core\group_permission_get_lowest;
 use function Newpoints\Core\language_load;
 use function Newpoints\Core\control_db;
 use function Newpoints\Core\log_add;
-use function Newpoints\Core\points_add;
+use function Newpoints\Core\points_subtract;
+
+use const Newpoints\Core\LOGGING_TYPE_CHARGE;
 
 function newpoints_global_start(array &$hook_arguments): array
 {
@@ -60,9 +62,9 @@ function showthread_start09(): bool
         return false;
     }
 
-    $user_id = (int)$mybb->user['uid'];
+    $current_user_id = (int)$mybb->user['uid'];
 
-    $is_author = (int)$thread['uid'] === $user_id;
+    $is_author = (int)$thread['uid'] === $current_user_id;
 
     $is_moderator = false;
 
@@ -127,7 +129,7 @@ function showthread_start09(): bool
 
         $db->update_query('threads', ['newpoints_bump_thread_stamp' => TIME_NOW], "tid='{$thread_id}'");
 
-        $db->update_query('users', ['newpoints_bump_thread_last_stamp' => TIME_NOW], "uid='{$user_id}'");
+        $db->update_query('users', ['newpoints_bump_thread_last_stamp' => TIME_NOW], "uid='{$current_user_id}'");
 
         $forum_id = (int)$thread['fid'];
 
@@ -136,14 +138,19 @@ function showthread_start09(): bool
         $db->delete_query('threadsread', "tid='{$thread_id}'");
 
         if ($is_author) {
-            points_add($user_id, -$bump_price);
+            points_subtract($current_user_id, $bump_price);
         }
 
         log_add(
             'bump_thread',
-            "tid:{$thread_id};price:{$bump_price}",
+            '',
             $mybb->user['username'] ?? '',
-            $user_id
+            $current_user_id,
+            $bump_price,
+            $thread_id,
+            0,
+            0,
+            LOGGING_TYPE_CHARGE
         );
 
         redirect(
