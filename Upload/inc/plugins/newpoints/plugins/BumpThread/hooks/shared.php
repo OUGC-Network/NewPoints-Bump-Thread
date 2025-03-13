@@ -2,7 +2,7 @@
 
 /***************************************************************************
  *
- *    Newpoints Bump Thread plugin (/inc/plugins/newpoints/plugins/ougc/BumpThread/hooks/shared.php)
+ *    NewPoints Bump Thread plugin (/inc/plugins/newpoints/plugins/ougc/BumpThread/hooks/shared.php)
  *    Author: Omar Gonzalez
  *    Copyright: © 2012 Omar Gonzalez
  *
@@ -28,7 +28,7 @@
 
 declare(strict_types=1);
 
-namespace Newpoints\BumpThread\Hooks\Shared;
+namespace NewPoints\BumpThread\Hooks\Shared;
 
 use postDataHandler;
 

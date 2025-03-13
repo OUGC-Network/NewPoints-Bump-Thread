@@ -2,7 +2,7 @@
 
 /***************************************************************************
  *
- *    Newpoints Bump Thread plugin (/inc/plugins/dvz_stream/streams/newpoints_bump_thread.php)
+ *    NewPoints Bump Thread plugin (/inc/plugins/dvz_stream/streams/newpoints_bump_thread.php)
  *    Author: Omar Gonzalez
  *    Copyright: © 2012 Omar Gonzalez
  *
@@ -34,7 +34,7 @@ use dvzStream\StreamEvent;
 use function dvzStream\addStream;
 use function dvzStream\getCsvSettingValues;
 use function dvzStream\getInaccessibleForumIds;
-use function Newpoints\Core\language_load;
+use function NewPoints\Core\language_load;
 
 $stream = new Stream();
 

@@ -2,7 +2,7 @@
 
 /***************************************************************************
  *
- *    Newpoints Bump Thread plugin (/inc/plugins/newpoints/languages/espanol/admin/newpoints_bump_thread.lang.php)
+ *    NewPoints Bump Thread plugin (/inc/plugins/newpoints/languages/espanol/admin/newpoints_bump_thread.lang.php)
  *    Author: Omar Gonzalez
  *    Copyright: © 2012 Omar Gonzalez
  *

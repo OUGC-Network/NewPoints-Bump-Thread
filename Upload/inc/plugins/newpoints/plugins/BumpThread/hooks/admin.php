@@ -2,7 +2,7 @@
 
 /***************************************************************************
  *
- *    Newpoints Bump Thread plugin (/inc/plugins/newpoints/plugins/ougc/BumpThread/hooks/admin.php)
+ *    NewPoints Bump Thread plugin (/inc/plugins/newpoints/plugins/ougc/BumpThread/hooks/admin.php)
  *    Author: Omar Gonzalez
  *    Copyright: © 2012 Omar Gonzalez
  *
@@ -28,12 +28,12 @@
 
 declare(strict_types=1);
 
-namespace Newpoints\BumpThread\Hooks\Admin;
+namespace NewPoints\BumpThread\Hooks\Admin;
 
-use function Newpoints\Core\language_load;
+use function NewPoints\Core\language_load;
 
-use const Newpoints\BumpThread\Admin\FIELDS_DATA;
-use const Newpoints\BumpThread\ROOT;
+use const NewPoints\BumpThread\Admin\FIELDS_DATA;
+use const NewPoints\BumpThread\ROOT;
 
 function newpoints_settings_rebuild_start(array $hook_arguments): array
 {

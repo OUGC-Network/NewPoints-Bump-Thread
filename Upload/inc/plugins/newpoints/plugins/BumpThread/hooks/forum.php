@@ -2,7 +2,7 @@
 
 /***************************************************************************
  *
- *    Newpoints Bump Thread plugin (/inc/plugins/newpoints/plugins/ougc/BumpThread/hooks/forum.php)
+ *    NewPoints Bump Thread plugin (/inc/plugins/newpoints/plugins/ougc/BumpThread/hooks/forum.php)
  *    Author: Omar Gonzalez
  *    Copyright: © 2012 Omar Gonzalez
  *
@@ -28,19 +28,19 @@
 
 declare(strict_types=1);
 
-namespace Newpoints\BumpThread\Hooks\Forum;
+namespace NewPoints\BumpThread\Hooks\Forum;
 
 use MyBB;
 
-use function Newpoints\Core\get_setting;
-use function Newpoints\Core\group_permission_get_lowest;
-use function Newpoints\Core\language_load;
-use function Newpoints\Core\control_db;
-use function Newpoints\Core\log_add;
-use function Newpoints\Core\points_subtract;
-use function Newpoints\Core\post_parser;
+use function NewPoints\Core\get_setting;
+use function NewPoints\Core\group_permission_get_lowest;
+use function NewPoints\Core\language_load;
+use function NewPoints\Core\control_db;
+use function NewPoints\Core\log_add;
+use function NewPoints\Core\points_subtract;
+use function NewPoints\Core\post_parser;
 
-use const Newpoints\Core\LOGGING_TYPE_CHARGE;
+use const NewPoints\Core\LOGGING_TYPE_CHARGE;
 
 function global_intermediate(): bool
 {
@@ -141,7 +141,8 @@ function showthread_start09(): bool
 
         $interval_seconds = $interval_minutes * 60;
 
-        if ($thread['newpoints_bump_thread_stamp'] + $interval_seconds > TIME_NOW || $mybb->user['newpoints_bump_thread_last_stamp'] + $interval_seconds > TIME_NOW) {
+        if ($thread['newpoints_bump_thread_stamp'] + $interval_seconds > TIME_NOW ||
+            $mybb->user['newpoints_bump_thread_last_stamp'] + $interval_seconds > TIME_NOW) {
             error(
                 $lang->sprintf(
                     $lang->newpoints_bump_thread_error_interval,

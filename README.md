@@ -1,10 +1,10 @@
-<h3 align="center">Newpoints Bump Thread</h3>
+<h3 align="center">NewPoints Bump Thread</h3>
 
 <div align="center">
 
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![GitHub Issues](https://img.shields.io/github/issues/OUGC-Network/Newpoints--Bump-Thread.svg)](./issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/OUGC-OUGC-Network/Newpoints--Bump-Thread.svg)](./pulls)
+[![GitHub Issues](https://img.shields.io/github/issues/OUGC-Network/NewPoints--Bump-Thread.svg)](./issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/OUGC-OUGC-Network/NewPoints--Bump-Thread.svg)](./pulls)
 [![License](https://img.shields.io/badge/license-GPL-blue)](/LICENSE)
 
 </div>
@@ -50,7 +50,7 @@ A setup that meets the following requirements is necessary to use this plugin.
 
 - [MyBB](https://mybb.com/) >= 1.8
 - PHP >= 7
-- [Newpoints](https://github.com/OUGC-Network/Newpoints) >= 3
+- [NewPoints](https://github.com/OUGC-Network/NewPoints) >= 3
 
 ### File structure <a name = "file_structure"></a>
 
@@ -100,7 +100,7 @@ Follow the next steps in order to update your copy of this plugin.
 1. Browse to _Configuration » Plugins_ and deactivate this plugin by clicking _Deactivate_.
 2. Follow step 1 and 2 from the [Install](#install) section.
 3. Browse to _Configuration » Plugins_ and activate this plugin by clicking _Activate_.
-4. Browse to _NewPoints_ to manage Newpoints modules.
+4. Browse to _NewPoints_ to manage NewPoints modules.
 
 ### Template Modifications <a name = "template_modifications"></a>
 
@@ -168,7 +168,7 @@ Two new settings are added to groups.
 
 - [@Omar G](https://github.com/Sama34) - Idea & Initial work
 
-See also the list of [contributors](https://github.com/OUGC-Network/Newpoints--Bump-Thread/contributors) who
+See also the list of [contributors](https://github.com/OUGC-Network/NewPoints--Bump-Thread/contributors) who
 participated in
 this
 project.

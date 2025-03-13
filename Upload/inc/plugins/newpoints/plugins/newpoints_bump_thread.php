@@ -2,7 +2,7 @@
 
 /***************************************************************************
  *
- *    Newpoints Bump Thread plugin (/inc/plugins/newpoints/plugins/newpoints_bump_thread.php)
+ *    NewPoints Bump Thread plugin (/inc/plugins/newpoints/plugins/newpoints_bump_thread.php)
  *    Author: Omar Gonzalez
  *    Copyright: © 2012 Omar Gonzalez
  *
@@ -28,37 +28,37 @@
 
 declare(strict_types=1);
 
-use function Newpoints\BumpThread\Admin\plugin_activation;
-use function Newpoints\BumpThread\Admin\plugin_information;
-use function Newpoints\BumpThread\Admin\plugin_installation;
-use function Newpoints\BumpThread\Admin\plugin_is_installed;
-use function Newpoints\BumpThread\Admin\plugin_uninstallation;
-use function Newpoints\Core\add_hooks;
+use function NewPoints\BumpThread\Admin\plugin_activation;
+use function NewPoints\BumpThread\Admin\plugin_information;
+use function NewPoints\BumpThread\Admin\plugin_installation;
+use function NewPoints\BumpThread\Admin\plugin_is_installed;
+use function NewPoints\BumpThread\Admin\plugin_uninstallation;
+use function NewPoints\Core\add_hooks;
 
-use function Newpoints\Core\templates_get;
+use function NewPoints\Core\templates_get;
 
-use const Newpoints\BumpThread\ROOT;
-use const Newpoints\ROOT_PLUGINS;
+use const NewPoints\BumpThread\ROOT;
+use const NewPoints\ROOT_PLUGINS;
 
 defined('IN_MYBB') || die('Direct initialization of this file is not allowed.');
 
-define('Newpoints\BumpThread\ROOT', ROOT_PLUGINS . '/BumpThread');
+define('NewPoints\BumpThread\ROOT', ROOT_PLUGINS . '/BumpThread');
 
 if (defined('IN_ADMINCP')) {
     require_once ROOT . '/admin.php';
 
     require_once ROOT . '/hooks/admin.php';
 
-    add_hooks('Newpoints\BumpThread\Hooks\Admin');
+    add_hooks('NewPoints\BumpThread\Hooks\Admin');
 } else {
     require_once ROOT . '/hooks/forum.php';
 
-    add_hooks('Newpoints\BumpThread\Hooks\Forum');
+    add_hooks('NewPoints\BumpThread\Hooks\Forum');
 }
 
 require_once ROOT . '/hooks/shared.php';
 
-add_hooks('Newpoints\BumpThread\Hooks\Shared');
+add_hooks('NewPoints\BumpThread\Hooks\Shared');
 
 function newpoints_bump_thread_info(): array
 {

@@ -2,7 +2,7 @@
 
 /***************************************************************************
  *
- *    Newpoints Bump Thread plugin (/inc/plugins/newpoints/plugins/ougc/BumpThread/admin.php)
+ *    NewPoints Bump Thread plugin (/inc/plugins/newpoints/plugins/ougc/BumpThread/admin.php)
  *    Author: Omar Gonzalez
  *    Copyright: © 2012 Omar Gonzalez
  *
@@ -28,19 +28,19 @@
 
 declare(strict_types=1);
 
-namespace Newpoints\BumpThread\Admin;
+namespace NewPoints\BumpThread\Admin;
 
-use function Newpoints\Admin\db_build_field_definition;
-use function Newpoints\Admin\db_verify_columns;
-use function Newpoints\Core\language_load;
-use function Newpoints\Core\log_remove;
-use function Newpoints\Core\settings_remove;
-use function Newpoints\Core\templates_remove;
+use function NewPoints\Admin\db_build_field_definition;
+use function NewPoints\Admin\db_verify_columns;
+use function NewPoints\Core\language_load;
+use function NewPoints\Core\log_remove;
+use function NewPoints\Core\settings_remove;
+use function NewPoints\Core\templates_remove;
 
-use const Newpoints\Core\FORM_TYPE_CHECK_BOX;
-use const Newpoints\Core\FORM_TYPE_NUMERIC_FIELD;
-use const Newpoints\DECIMAL_DATA_TYPE_SIZE;
-use const Newpoints\DECIMAL_DATA_TYPE_STEP;
+use const NewPoints\Core\FORM_TYPE_CHECK_BOX;
+use const NewPoints\Core\FORM_TYPE_NUMERIC_FIELD;
+use const NewPoints\DECIMAL_DATA_TYPE_SIZE;
+use const NewPoints\DECIMAL_DATA_TYPE_STEP;
 
 const FIELDS_DATA = [
     'threads' => [
@@ -116,7 +116,8 @@ function plugin_information(): array
         'authorsite' => 'https://ougc.network',
         'version' => '3.1.0',
         'versioncode' => 3100,
-        'compatibility' => '3*'
+        'compatibility' => '3*',
+        'codename' => 'newpoints_bump_thread'
     ];
 }
 
