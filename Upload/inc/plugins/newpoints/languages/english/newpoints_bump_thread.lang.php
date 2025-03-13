@@ -40,4 +40,7 @@ $l = [
 
     'newpoints_bump_thread_page_logs_bump_thread' => 'Bump Thread',
     'newpoints_bump_thread_page_logs_thread_link' => '<a href="{1}/{2}">{3}</a>',
+
+    'newpoints_bump_thread_dvz_stream' => 'Bumped Threads',
+    'newpoints_bump_thread_dvz_stream_event' => 'Bumped Thread',
 ];

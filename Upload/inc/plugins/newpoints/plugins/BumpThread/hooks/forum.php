@@ -42,6 +42,28 @@ use function Newpoints\Core\post_parser;
 
 use const Newpoints\Core\LOGGING_TYPE_CHARGE;
 
+function global_intermediate(): bool
+{
+    global $mybb;
+
+    if (get_setting('bump_thread_enable_dvz_stream') && isset($mybb->settings['dvz_stream_active_streams'])) {
+        $mybb->settings['dvz_stream_active_streams'] .= ',newpoints_bump_thread';
+    }
+
+    return true;
+}
+
+function xmlhttp09(): bool
+{
+    global $mybb;
+
+    if (get_setting('bump_thread_enable_dvz_stream') && isset($mybb->settings['dvz_stream_active_streams'])) {
+        $mybb->settings['dvz_stream_active_streams'] .= ',newpoints_bump_thread';
+    }
+
+    return true;
+}
+
 function newpoints_global_start(array &$hook_arguments): array
 {
     $hook_arguments['showthread.php'][] = 'newpoints_bump_thread_showthread_button';
