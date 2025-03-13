@@ -2,7 +2,7 @@
 
 /***************************************************************************
  *
- *    Newpoints Bump Thread plugin (/inc/plugins/newpoints/languages/english/newpoints_bump_thread.lang.php)
+ *    Newpoints Bump Thread plugin (/inc/plugins/newpoints/plugins/ougc/BumpThread/hooks/shared.php)
  *    Author: Omar Gonzalez
  *    Copyright: © 2012 Omar Gonzalez
  *
@@ -26,21 +26,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  ****************************************************************************/
 
-$l = [
-    'newpoints_bump_thread' => 'Bump Thread',
+declare(strict_types=1);
 
-    'newpoints_bump_thread_show_thread_button' => 'Bump Thread',
-    'newpoints_bump_thread_show_thread_button_title' => 'Last bump on: {1}',
+namespace Newpoints\BumpThread\Hooks\Shared;
 
-    'newpoints_bump_thread_error_price' => 'You need at least {1} to bump this thread, you currently hava {2}.',
-    'newpoints_bump_thread_error_interval' => 'You must wait {1} minutes before you can bump this thread.',
+use postDataHandler;
 
-    'newpoints_bump_thread_success_title' => 'Thread bumped successfully',
-    'newpoints_bump_thread_success_message' => 'The thread was bumped successfully.<br />Now you will be redirected back to the thread.',
+function datahandler_post_insert_post_end(postDataHandler &$data_handler): postDataHandler
+{
+    if (!empty($data_handler->return_values['visible'])) {
+        global $db;
 
-    'newpoints_bump_thread_page_logs_bump_thread' => 'Bump Thread',
-    'newpoints_bump_thread_page_logs_thread_link' => '<a href="{1}/{2}">{3}</a>',
+        $db->update_query(
+            'threads',
+            ['newpoints_bump_thread_stamp' => (int)$data_handler->data['dateline']],
+            'tid=' . (int)$data_handler->data['tid']
+        );
+    }
 
-    'newpoints_bump_thread_dvz_stream' => 'Bumped Threads',
-    'newpoints_bump_thread_dvz_stream_event' => 'Bumped Thread',
-];
+    return $data_handler;
+}
+
+function datahandler_post_insert_thread(postDataHandler &$data_handler): postDataHandler
+{
+    $data_handler->thread_insert_data['newpoints_bump_thread_stamp'] = (int)$data_handler->data['dateline'];
+
+    return $data_handler;
+}

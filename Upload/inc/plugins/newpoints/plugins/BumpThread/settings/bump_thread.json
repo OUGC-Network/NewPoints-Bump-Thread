@@ -1,0 +1,22 @@
+{
+  "action_name": {
+    "type": "text",
+    "value": "bump_thread"
+  },
+  "enable_dvz_stream": {
+    "type": "yesno",
+    "value": 1
+  },
+  "price": {
+    "type": "text",
+    "value": 10
+  },
+  "allow_closed_threads": {
+    "type": "yesno",
+    "value": 0
+  },
+  "allow_moderator_bypass": {
+    "type": "yesno",
+    "value": 1
+  }
+}
