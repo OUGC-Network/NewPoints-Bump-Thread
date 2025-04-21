@@ -1,3 +1,9 @@
+<p align="center">
+    <a href="" rel="noopener">
+        <img width="700" height="400" src="https://github.com/user-attachments/assets/c5792e53-89c9-4fdf-a6aa-de96f244a1c0" alt="Project logo">
+    </a>
+</p>
+
 <h3 align="center">NewPoints Bump Thread</h3>
 
 <div align="center">
