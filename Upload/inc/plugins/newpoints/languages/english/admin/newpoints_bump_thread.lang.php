@@ -32,7 +32,7 @@ $l = [
     'newpoints_bump_thread_credits' => 'Original plugin coded by <a href="https://mybbhacks.zingaburga.com/member.php?action=profile&uid=1">Zinga Burga from MyBBHacks</a>.',
 
     'setting_group_newpoints_bump_thread' => 'Bump Thread',
-    'setting_group_newpoints_bump_thread_desc' => 'Allows users to bump their own threads for a price.',
+    'setting_group_newpoints_bump_thread_desc' => 'Allows users to bump their own threads in exchange of points.',
     'setting_newpoints_bump_thread_action_name' => 'Action Page Name',
     'setting_newpoints_bump_thread_action_name_desc' => 'Select the action input name to use for this feature.',
     'setting_newpoints_bump_thread_enable_dvz_stream' => 'Enable DVZ Stream Integration',
@@ -50,7 +50,7 @@ $l = [
     'newpoints_user_groups_bump_thread_can_use' => 'Can bump threads?',
     'newpoints_user_groups_bump_thread_interval' => 'Thread Bump Interval<br /><small class="input">Number of minutes between each thread bump. <code style="color: darkorange;">Lowest from all groups.</code> </small><br />',
 
-    'newpoints_user_groups_rate_bump_thread' => 'Bump Thread Rate <code style="color: darkorange;">This works as a percentage. So "0" = user does not pay anything "100" = users pay full price, "200" = user pays twice the price, etc.</code><br /><small class="input">The bump thread rate for this group, used when subtracting points from users when they bump a thread (multiplies the <code>Bump Thread Price</code> permission). Default is <code>100</code>.</small><br />',
+    'newpoints_user_groups_rate_bump_thread' => 'Bump Thread Rate <code style="color: darkorange;">This works as a percentage. So "0" = user does not pay anything "100" = users pay full points, "200" = user pays twice the points, etc.</code><br /><small class="input">The bump thread rate for this group, used when subtracting points from users when they bump a thread (multiplies the <code>Bump Thread Price</code> permission). Default is <code>100</code>.</small><br />',
 
     'newpoints_forums_rate_bump_thread' => 'Bump Thread Rate<br /><small class="input">The rate for bumping threads in this forum. Default is <code>1</code>.</small><br />'
 ];
